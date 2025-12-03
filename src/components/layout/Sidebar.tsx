@@ -41,7 +41,7 @@ export const Sidebar = () => {
       </div>
       <div className="mt-auto">
         <Separator className="mb-4" />
-        <Button variant="outline" className="w-full" onClick={handleLogout}>
+        <Button variant="outline" className="w-full">
           <a href="https://github.com/ref0s/react-task">
           Github
           </a>

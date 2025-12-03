@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Separator } from '@/components/ui/separator'
+import { Icons } from '@/components/icons'
 
 export const LoginPage = () => {
   const { login } = useAuth()
@@ -43,7 +45,6 @@ export const LoginPage = () => {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Admin Login</CardTitle>
-          <CardDescription>Use your DummyJSON credentials to sign in.</CardDescription>
         </CardHeader>
         <CardContent>
           {error && (
@@ -61,7 +62,7 @@ export const LoginPage = () => {
                 id="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="kminchelle"
+                placeholder="username"
                 required
               />
             </div>
@@ -80,6 +81,15 @@ export const LoginPage = () => {
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? 'Signing in...' : 'Login'}
+            </Button>
+            <Separator/>
+            <Button type="submit" className="w-full" disabled={loading} variant="outline">
+              <Icons.google className="mr-2 h-4 w-4" />
+              {loading ? 'Signing in...' : 'Google'}
+            </Button>            
+            <Button type="submit" className="w-full" disabled={loading} variant="outline">
+              <Icons.apple className="mr-2 h-4 w-4" />
+              {loading ? 'Signing in...' : 'Apple'}
             </Button>
           </form>
         </CardContent>
