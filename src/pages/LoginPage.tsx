@@ -1,44 +1,42 @@
-import axios from 'axios'
-import { useState, type FormEvent } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
-import { useAuth } from '@/components/auth/AuthProvider'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Separator } from '@/components/ui/separator'
-import { Icons } from '@/components/icons'
+import axios from "axios";
+import { useState, type FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Separator } from "@/components/ui/separator";
+import { Icons } from "@/components/icons";
 
 export const LoginPage = () => {
-  const { login } = useAuth()
-  const navigate = useNavigate()
-  const location = useLocation()
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    setError('')
-    setLoading(true)
+    event.preventDefault();
+    setError("");
+    setLoading(true);
 
     try {
-      await login(username, password)
-      const redirectState = location.state as { from?: { pathname?: string } } | null
-      const redirectTo = redirectState?.from?.pathname || '/dashboard'
-      navigate(redirectTo, { replace: true })
+      await login(username, password);
+
+      navigate("/dashboard", { replace: true });
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        const message = (err.response?.data as { message?: string })?.message
-        setError(message || 'Invalid credentials. Please try again.')
+        const message = (err.response?.data as { message?: string })?.message;
+        setError(message || "Invalid credentials. Please try again.");
       } else {
-        setError('Invalid credentials. Please try again.')
+        setError("Invalid credentials. Please try again.");
       }
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/40 px-4">
@@ -80,20 +78,30 @@ export const LoginPage = () => {
               />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Signing in...' : 'Login'}
+              {loading ? "Signing in..." : "Login"}
             </Button>
-            <Separator/>
-            <Button type="submit" className="w-full" disabled={loading} variant="outline">
+            <Separator />
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={loading}
+              variant="outline"
+            >
               <Icons.google className="mr-2 h-4 w-4" />
-              {loading ? 'Signing in...' : 'Google'}
-            </Button>            
-            <Button type="submit" className="w-full" disabled={loading} variant="outline">
+              {loading ? "Signing in..." : "Google"}
+            </Button>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={loading}
+              variant="outline"
+            >
               <Icons.apple className="mr-2 h-4 w-4" />
-              {loading ? 'Signing in...' : 'Apple'}
+              {loading ? "Signing in..." : "Apple"}
             </Button>
           </form>
         </CardContent>
       </Card>
     </div>
-  )
-}
+  );
+};

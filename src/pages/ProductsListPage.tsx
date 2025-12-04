@@ -7,12 +7,22 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { toast } from 'sonner'
 
 export const ProductsListPage = () => {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [categoryFilter, setCategoryFilter] = useState('all')
 
   const fetchProducts = async () => {
     setLoading(true)
@@ -42,6 +52,25 @@ export const ProductsListPage = () => {
     }
   }
 
+const categories = products
+  .map((p) => p.category)
+  .filter((category, index, all) => all.indexOf(category) === index)
+  .sort()
+
+  const filteredProducts = products.filter((product) => {
+    const query = searchQuery.toLowerCase()
+    const title = product.title.toLowerCase()
+    const description = product.description.toLowerCase()
+
+    const matchesSearch =
+      title.includes(query) || description.includes(query)
+
+    const matchesCategory =
+      categoryFilter === 'all' || product.category === categoryFilter
+
+    return matchesSearch && matchesCategory
+  })
+
   return (
     <div className="space-y-4 w-4/5 mx-auto ">
       <div className="flex items-center justify-between mt-10">
@@ -52,6 +81,31 @@ export const ProductsListPage = () => {
         <Button asChild>
           <Link to="/dashboard/products/new">Add Product</Link>
         </Button>
+      </div>
+
+      <div className="flex items-center gap-4">
+        <Input
+          placeholder="Search products..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="max-w-sm"
+        />
+        <Select
+          value={categoryFilter}
+          onValueChange={(value) => setCategoryFilter(value)}
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Category" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Categories</SelectItem>
+            {categories.map((category) => (
+              <SelectItem key={category} value={category}>
+                {category}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {error && (
@@ -79,7 +133,7 @@ export const ProductsListPage = () => {
           </CardContent>
         </Card>
       ) : (
-        <ProductTable products={products} onDelete={handleDelete} />
+        <ProductTable products={filteredProducts} onDelete={handleDelete} />
       )}
     </div>
   )

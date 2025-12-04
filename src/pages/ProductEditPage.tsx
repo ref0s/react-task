@@ -1,66 +1,75 @@
-import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import type { Product } from '@/api'
-import { getProduct, updateProduct } from '@/api'
-import { ProductForm, type ProductFormValues } from '@/components/products/ProductForm'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Skeleton } from '@/components/ui/skeleton'
-import { toast } from 'sonner'
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import type { Product } from "@/api";
+import { getProduct, updateProduct } from "@/api";
+import {
+  ProductForm,
+  type ProductFormValues,
+} from "@/components/products/ProductForm";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
 
 export const ProductEditPage = () => {
-  const { id } = useParams<{ id: string }>()
-  const navigate = useNavigate()
-  const [product, setProduct] = useState<Product | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-  const [error, setError] = useState('')
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const load = async () => {
-      if (!id) return
-      setError('')
-      setLoading(true)
+      if (!id) return;
+      setError("");
+      setLoading(true);
       try {
-        const data = await getProduct(id)
-        setProduct(data)
+        const data = await getProduct(id);
+        setProduct(data);
       } catch (err) {
-        setError('Failed to load product.')
+        setError("Failed to load product.");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    load()
-  }, [id])
+    load();
+  }, [id]);
 
   const handleSubmit = async (values: ProductFormValues) => {
-    if (!id) return
-    setSaving(true)
-    setError('')
+    if (!id) return;
+    setSaving(true);
+    setError("");
     try {
-      await updateProduct(id, values)
-      toast.success('Product updated')
-      navigate(`/dashboard/products/${id}`)
+      await updateProduct(id, values);
+      toast.success("Product updated");
+      navigate(`/dashboard/products/${id}`);
     } catch (err) {
-      setError('Failed to update product.')
+      setError("Failed to update product.");
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
-  }
+  };
 
   if (loading) {
-    return <Skeleton className="h-64 w-full" />
+    return <Skeleton className="h-64 w-full" />;
   }
 
   if (error || !product) {
     return (
       <Alert variant="destructive">
         <AlertTitle>Error</AlertTitle>
-        <AlertDescription>{error || 'Product not found.'}</AlertDescription>
+        <AlertDescription>{error || "Product not found."}</AlertDescription>
       </Alert>
-    )
+    );
   }
 
   return (
@@ -94,5 +103,5 @@ export const ProductEditPage = () => {
         />
       </CardContent>
     </Card>
-  )
-}
+  );
+};
