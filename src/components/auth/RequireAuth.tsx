@@ -1,18 +1,18 @@
-import { type ReactNode } from 'react'
-import { Navigate, useLocation } from 'react-router-dom'
-import { useAuth } from './AuthProvider'
+import { type ReactNode } from "react";
+import { Navigate, useLocation } from "react-router-dom";
+import { useAuth } from "./AuthProvider";
 
 type RequireAuthProps = {
-  children: ReactNode
-}
+  children: ReactNode;
+};
 
 export const RequireAuth = ({ children }: RequireAuthProps) => {
-  const { token } = useAuth()
-  const location = useLocation()
+  const { token } = useAuth();
+  const location = useLocation();
 
   if (!token) {
-    return <Navigate to="/login" replace state={{ from: location }} />
+    return <Navigate to="/login" replace state={{ from: location }} />;
   }
 
-  return <>{children}</>
-}
+  return <>{children}</>;
+};
